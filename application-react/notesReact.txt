@@ -1,0 +1,151 @@
+Notes Romain React
+React Native ==> Pour dev sur Android et iOS (SMARTPHONE)
+React        ==> Web / Web Application
+
+Expo ==> permet de lancer rapidement l'application mais on ne pourra pas utiliser la caméra ou les autres applications natives du téléphone 
+React Native ==> pour construire une vrai application (mais plus lent)
+
+Typescript (Langage de prog) ==> Langage supérieur au javascript, efficace pour la maintenance et la gestion des erreurs (debbogage)
+
+Architecture du projet :
+
+src 
+    - assets (dossier contenant les images, les polices, les sons, etc...)
+        - Images 
+    - models (dossier contenant les modèles de données)
+        - Pokemon.tsx ==> Modèle de données pour un pokemon
+    - views (dossier contenant les vues de l'application)
+        - Home.tsx ==> Vue principale de l'application
+        - Login.tsx ==> Vue de connexion
+        - Register.tsx ==> Vue d'inscription
+
+
+
+App.tsx ==> Fichier principal de l'application
+tsx ==> fichier Typescript 
+
+Toujours def une View pour chacun des composants de l'application
+<View> 
+    <Text> </Text>
+</View>
+
+A la fin d'un fichier vue, il faut indiquer 
+export default NomDuFichier; 
+pour pouvoir l'importer dans un autre fichier
+
+Definir des variables :
+
+const name = 'Pikachu';
+const level = 15;
+const level:number = 15; (si on veut typer)
+const isMale:boolean = true;
+
+<View>
+    <Text> This is a Pokemon </Text>
+    <Text> Name : {name} </Text>
+</View>
+
+Opération ternéaire :
+{variable ? <Text> Si vrai </Text> : <Text> Si faux </Text>}
+
+{isMale ?
+<Text> This is a make</Text>
+: <Text> This is a female</Text>
+}
+
+Pour inclure une image:
+
+<Image source={require('./assets/images/pikachu.png')} style={styles.imagePokemon} />
+C'est toujours le chemin relatif qui est utilisé
+
+Toujours préféré faire une variable globale pour les styles au lieu de mettre directement dans le code des styles
+
+const styles = StyleSheet.create({
+    imagePokemon: {
+        width: 100,
+        height: 100
+    }
+})
+
+Il faut génénrer une page en fonction de notre objet pokemon, on va donc utiliser une fonction:
+
+props = propriétés du component 
+const PokemonInfo = (props) => {
+    return (
+        <View>
+            <Text> This is a Pokemon </Text>
+            <Text> Name : {props.name} </Text>
+            <Text> Level : {props.level} </Text>
+            <Image source={require('./assets/images/pokemon' + props.id + ')} style={styles.imagePokemon} />
+        </View>
+    )
+}
+
+Je vais donc dans l'application princale faire appel à cette fonction:
+
+const HomeView = () => {
+    return (
+        <View>
+            <PokemonInfo name={"Pikachu"} level={15} />
+            <PokemonInfo name={"Carapuce"} level={10} />
+        </View>
+    )
+}
+
+
+Utilisation de FlatList:
+
+<FlatList
+    data={pokemons} //ici pokemons est une liste de pokemons 
+    renderItem={({item}) => <PokemonInfo name={item.name} level={item.level} />}
+    keyExtractor={item => item.id}
+
+
+Utilisation d'un State:
+
+// Ici on a def un compteur qui est une variable dont la valeur va être modifiée
+// Il faut toujours faire const [variable, setVariable] = useState...
+const [counterPokedex, setCounterPokedex] = useState(0); // on appelle cela aussi un hook
+
+// quand j'appelle cette fonction, la valeur de mon compteur augmente
+const onNext = () => {
+    setCounterPokedex(counterPokedex + 1);
+}
+
+const onPrevious = () {
+    setCounterPokedex(counterPokedex - 1);
+}
+
+Utilisation d'un button:
+
+<Button title="Next" onPress={onNext} />
+
+Utiliser triple égal === pour faire les évaluations
+
+TouchableOpacity ==> permet de faire un bouton qui réagit au toucher
+
+Genre par exemple cela permet de rendre une image cliquable
+
+<TouchableOpacity onPress={onNext}>
+    <Image source={require('./assets/images/pokemon' + pokemons[counterPokedex].id + ')} style={styles.imagePokemon} />
+</TouchableOpacity>
+
+
+Il faut distinguer component enfant et component parent
+
+Component enfant ==> component qui est appelé dans un autre component
+
+Component parent ==> component qui appelle un autre component
+
+Pour faire passer des données d'un component enfant à un component parent, on utilise les props
+
+Un props peut être une fonction ou une variable
+
+Attention, l'objet ne doit jamais changer directement, concepte d'immutabilité, TJR PASSER PAR LE STATE (SETTER)
+Donc on ne modifie pas directement, on fait une copie ou on crée un nouvel objet afin d'arrier à nos fins 
+
+let newArr = [...arr]; // copie d'un tableau
+let newObj = {...obj}; // copie d'un objet
+
+Copie d'un objet version hipster: 
+let newObj = Object.assign({}, obj);
