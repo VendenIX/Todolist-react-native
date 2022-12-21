@@ -1,3 +1,5 @@
+Demo de l'application: https://www.youtube.com/watch?v=tkCRqmgGa4Q
+
 Required: npm, (neo4j si pas de VM)
 
 How to install:
